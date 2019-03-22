@@ -1,0 +1,44 @@
+﻿<Properties StartupConfiguration="{19B4F557-F61F-49FB-A2B7-99641FACEDEA}|Default">
+  <MonoDevelop.Ide.ItemProperties.sample.TransitionApp.Android PreferredExecutionTarget="Android.pixel_xl" />
+  <MonoDevelop.Ide.ItemProperties.sample.TransitionApp.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.0B7714A1-3626-4A66-8F84-ACB11C9FE876" />
+  <MonoDevelop.Ide.ItemProperties.SharedTransitions.Android PreferredExecutionTarget="Android.nexus_5" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="SharedTransitions.Android/Renderers/SharedTransitionNavigationPageRenderer.cs">
+    <Files>
+      <File FileName="SharedTransitions.Android/Renderers/SharedTransitionNavigationPageRenderer.cs" Line="120" Column="1" />
+      <File FileName="SharedTransitions.Android/Resources/anim/fade_in.xml" Line="7" Column="7" />
+      <File FileName="SharedTransitions.Android/Resources/anim/fade_out.xml" Line="4" Column="5" />
+      <File FileName="Source Not Available" />
+      <File FileName="SharedTransitions.Android/Resources/transition/navigation_transition.xml" Line="8" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="SharedTransitions" expanded="True">
+            <Node name="sample" expanded="True" />
+            <Node name="SharedTransitions" expanded="True" />
+            <Node name="SharedTransitions.Android" expanded="True">
+              <Node name="Packages" expanded="True" />
+              <Node name="Renderers" expanded="True">
+                <Node name="SharedTransitionNavigationPageRenderer.cs" selected="True" />
+              </Node>
+              <Node name="Resources" expanded="True">
+                <Node name="anim" expanded="True" />
+                <Node name="transition" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="SharedTransitions.iOS" expanded="True">
+              <Node name="NavigationTransition" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.SharedTransitions.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.44ABBF49-5C9B-4F92-ABB1-1DC213618DE3" />
+</Properties>
