@@ -8,13 +8,14 @@ namespace Plugin.SharedTransitions.iOS.Extentions
     {
         internal static CGRect GetImageFrameWithAspectRatio(this UIImageView imageView)
         {
+            /*
             nfloat aspect = imageView.Image.Size.Width / imageView.Image.Size.Height;
 
             //calculate new dimensions based on aspect ratio
             nfloat newWidth   = imageView.Frame.Width * aspect;
             nfloat newHeight  = newWidth / aspect;
-            nfloat marginTop  = 0;
-            nfloat marginLeft = 0;
+            nfloat marginBottom  = 0;
+            nfloat marginRight = 0;
 
             if (newWidth > imageView.Frame.Width || newHeight > imageView.Frame.Height)
             {
@@ -24,17 +25,20 @@ namespace Plugin.SharedTransitions.iOS.Extentions
                 {
                     newWidth  = imageView.Frame.Width;
                     newHeight = newWidth / aspect;
-                    marginTop = (imageView.Frame.Height - newHeight) / 2;
+                    marginBottom = (imageView.Frame.Height - newHeight);
                 }
                 else
                 {
                     newHeight  = imageView.Frame.Height;
                     newWidth   = (int)(newHeight * aspect);
-                    marginLeft = (imageView.Frame.Width - newWidth) / 2;
+                    marginRight = (imageView.Frame.Width - newWidth);
                 }
             }
+            return new CGRect(imageView.Frame.X - marginRight, imageView.Frame.Y, newWidth, newHeight + marginBottom);
+            */
 
-            return new CGRect(imageView.Frame.X, imageView.Frame.Y + marginTop, newWidth + marginLeft, newHeight);
+
+            return new CGRect(imageView.Frame.X, imageView.Frame.Y, imageView.Frame.Width, imageView.Frame.Height);
         }
     }
 }

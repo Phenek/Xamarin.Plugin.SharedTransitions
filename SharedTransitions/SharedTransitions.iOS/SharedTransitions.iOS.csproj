@@ -15,6 +15,7 @@
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <ReleaseVersion>1.0.0</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -164,7 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharedTransitions\SharedTransitions.csproj">
-      <Project>{EA13072F-6E27-4254-9C31-B4FFD8F67EEF}</Project>
+      <Project>{83F27C01-C6BB-4CB8-85F9-525EC77C8CFF}</Project>
       <Name>SharedTransitions</Name>
     </ProjectReference>
   </ItemGroup>

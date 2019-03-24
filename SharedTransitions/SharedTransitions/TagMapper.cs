@@ -19,8 +19,7 @@ namespace Plugin.SharedTransitions
 
         public IReadOnlyList<Tags> GetMap(Page page, int group = 0)
         {
-            return MapStack.Where(x => x.PageId == page.Id)
-                           .Select(x => x.Tags.Where(y=>y.Group == group).ToList())
+            return MapStack.Select(x => x.Tags.Where(y => y.Group == group).ToList())
                            .FirstOrDefault() ?? new List<Tags>();
         }
 

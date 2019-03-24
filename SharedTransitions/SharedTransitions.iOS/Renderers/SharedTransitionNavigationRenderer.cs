@@ -20,9 +20,10 @@ namespace Plugin.SharedTransitions.iOS.Renderers
     [Preserve(AllMembers = true)]
     public class SharedTransitionNavigationRenderer : NavigationRenderer, IUINavigationControllerDelegate, IUIGestureRecognizerDelegate
     {
-        public double SharedTransitionDuration { get; set; }
-        public BackgroundAnimation BackgroundAnimation { get; set; }
-        int _selectedGroup;
+        int _selectedGroup => SharedTransitionNavigationPage.GetSelectedTagGroup(PropertiesContainer);
+        public double SharedTransitionDuration => (double)SharedTransitionNavigationPage.GetSharedTransitionDuration(PropertiesContainer) / 1000;
+        public BackgroundAnimation BackgroundAnimation => SharedTransitionNavigationPage.GetBackgroundAnimation(PropertiesContainer);
+        public UIScreenEdgePanGestureRecognizer InteractiveTransitionRecognizer = new UIScreenEdgePanGestureRecognizer();
 
         Page _propertiesContainer;
         public Page PropertiesContainer
@@ -32,18 +33,7 @@ namespace Plugin.SharedTransitions.iOS.Renderers
             {
                 if (_propertiesContainer == value)
                     return;
-
-                if (_propertiesContainer != null)
-                    _propertiesContainer.PropertyChanged -= HandleChildPropertyChanged;
-
                 _propertiesContainer = value;
-
-                if (_propertiesContainer != null)
-                    _propertiesContainer.PropertyChanged += HandleChildPropertyChanged;
-
-                UpdateBackgroundTransition();
-                UpdateSharedTransitionDuration();
-                UpdateSelectedGroup();
             }
         }
 
@@ -69,6 +59,12 @@ namespace Plugin.SharedTransitions.iOS.Renderers
                 var destinationPage = operation == UINavigationControllerOperation.Push
                     ? NavPage.CurrentPage
                     : PropertiesContainer;
+
+
+                if (viewsToAnimate.Any() && !View.GestureRecognizers.Contains(InteractiveTransitionRecognizer))
+                    View.AddGestureRecognizer(InteractiveTransitionRecognizer);
+                else if (!viewsToAnimate.Any() && View.GestureRecognizers.Contains(InteractiveTransitionRecognizer))
+                    View.RemoveGestureRecognizer(InteractiveTransitionRecognizer);
 
                 //Get all the views with tags in the destination page
                 //With this, we are sure to dont start transitions with no mathing tags in destination
@@ -144,13 +140,12 @@ namespace Plugin.SharedTransitions.iOS.Renderers
             base.ViewDidLoad();
 
             //Add PanGesture on left edge to POP page
-            var interactiveTransitionRecognizer = new UIScreenEdgePanGestureRecognizer();
-            interactiveTransitionRecognizer.AddTarget(() => InteractiveTransitionRecognizerAction(interactiveTransitionRecognizer));
-            interactiveTransitionRecognizer.Edges = UIRectEdge.Left;
-            View.AddGestureRecognizer(interactiveTransitionRecognizer);
+            InteractiveTransitionRecognizer.AddTarget(() => InteractiveTransitionRecognizerAction(InteractiveTransitionRecognizer));
+            InteractiveTransitionRecognizer.Edges = UIRectEdge.Left;
+            View.AddGestureRecognizer(InteractiveTransitionRecognizer);
         }
 
-        void InteractiveTransitionRecognizerAction(UIScreenEdgePanGestureRecognizer sender)
+        public void InteractiveTransitionRecognizerAction(UIScreenEdgePanGestureRecognizer sender)
         {
             var percent = sender.TranslationInView(sender.View).X / sender.View.Frame.Width;
 
@@ -180,37 +175,6 @@ namespace Plugin.SharedTransitions.iOS.Renderers
                     _percentDrivenInteractiveTransition = null;
                     break;
             }
-        }
-
-        void HandleChildPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == SharedTransitionNavigationPage.BackgroundAnimationProperty.PropertyName)
-            {
-                UpdateBackgroundTransition();
-            }
-            else if (e.PropertyName == SharedTransitionNavigationPage.SharedTransitionDurationProperty.PropertyName)
-            {
-                UpdateSharedTransitionDuration();
-            }
-            else if (e.PropertyName == SharedTransitionNavigationPage.SelectedTagGroupProperty.PropertyName)
-            {
-                UpdateSelectedGroup();
-            }
-        }
-
-        void UpdateBackgroundTransition()
-        {
-            BackgroundAnimation = SharedTransitionNavigationPage.GetBackgroundAnimation(PropertiesContainer);
-        }
-
-        void UpdateSharedTransitionDuration()
-        {
-            SharedTransitionDuration = (double) SharedTransitionNavigationPage.GetSharedTransitionDuration(PropertiesContainer) / 1000;
-        }
-
-        void UpdateSelectedGroup()
-        {
-            _selectedGroup = SharedTransitionNavigationPage.GetSelectedTagGroup(PropertiesContainer);
         }
     }
 }

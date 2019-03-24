@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Plugin.SharedTransitions;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
@@ -25,16 +26,18 @@ namespace Plugin.SharedTransitions.iOS.Effects
 
         protected override void OnElementPropertyChanged(PropertyChangedEventArgs args)
         {
+            Console.WriteLine(args.PropertyName + "\n");
+
             if (args.PropertyName == Transition.TagProperty.PropertyName ||
                 args.PropertyName == Transition.TagGroupProperty.PropertyName)
                 UpdateTag();
-
+                
             base.OnElementPropertyChanged(args);
         }
 
         void UpdateTag()
         {
-            if (Element is View element)
+            if (Element is View element && Control != null)
                 Control.Tag = Transition.RegisterTagInStack(element);
         }
     }
