@@ -23,34 +23,28 @@ namespace Plugin.SharedTransitions.Droid.Renderers
     {
         readonly FragmentManager _fragmentManager;
         bool _popToRoot;
-        int _selectedGroup;
 
-        BackgroundAnimation _backgroundAnimation;
+        int _selectedGroup => SharedTransitionNavigationPage.GetSelectedTagGroup(PropertiesContainer);
+        BackgroundAnimation _backgroundAnimation => SharedTransitionNavigationPage.GetBackgroundAnimation(PropertiesContainer);
         long _sharedTransitionDuration;
-
         SharedTransitionNavigationPage NavPage => Element as SharedTransitionNavigationPage;
 
+        //_sharedTransitionDuration + 100 is a fix to prevent bad behaviours on pop (due to SetReorderingAllowed)
+        //after the transition end, we need to wait a bit before telling the rendere that we are done
+        //Not needed in PopToRoot
+        protected override int TransitionDuration => (_popToRoot || Build.VERSION.SdkInt < BuildVersionCodes.Lollipop)
+            ? base.TransitionDuration
+            : (int)SharedTransitionNavigationPage.GetSharedTransitionDuration(PropertiesContainer) + 100;
+
         Page _propertiesContainer;
-        private Page PropertiesContainer
+        public Page PropertiesContainer
         {
             get => _propertiesContainer;
             set
             {
                 if (_propertiesContainer == value)
                     return;
-
-                if (_propertiesContainer != null)
-                    _propertiesContainer.PropertyChanged -= PropertiesContainerOnPropertyChanged;
-
                 _propertiesContainer = value;
-
-                if (_propertiesContainer != null)
-                {
-                    _propertiesContainer.PropertyChanged += PropertiesContainerOnPropertyChanged;
-                    UpdateBackgroundTransition();
-                    UpdateSharedTransitionDuration();
-                    UpdateSelectedGroup();
-                }
             }
         }
 
@@ -186,46 +180,6 @@ namespace Plugin.SharedTransitions.Droid.Renderers
             _popToRoot = false;
 
             return result;
-        }
-
-        protected override int TransitionDuration
-        {
-            //_sharedTransitionDuration + 100 is a fix to prevent bad behaviours on pop (due to SetReorderingAllowed)
-            //after the transition end, we need to wait a bit before telling the rendere that we are done
-            //Not needed in PopToRoot
-            get => _popToRoot || Build.VERSION.SdkInt < BuildVersionCodes.Lollipop ? base.TransitionDuration : (int)_sharedTransitionDuration + 100;
-            set => _sharedTransitionDuration = value;
-        }
-
-        void PropertiesContainerOnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == SharedTransitionNavigationPage.BackgroundAnimationProperty.PropertyName)
-            {
-                UpdateBackgroundTransition();
-            }
-            else if (e.PropertyName == SharedTransitionNavigationPage.SharedTransitionDurationProperty.PropertyName)
-            {
-                UpdateSharedTransitionDuration();
-            }
-            else if (e.PropertyName == SharedTransitionNavigationPage.SelectedTagGroupProperty.PropertyName)
-            {
-                UpdateSelectedGroup();
-            }
-        }
-
-        void UpdateBackgroundTransition()
-        {
-            _backgroundAnimation = SharedTransitionNavigationPage.GetBackgroundAnimation(PropertiesContainer);
-        }
-
-        void UpdateSharedTransitionDuration()
-        {
-            TransitionDuration = (int)SharedTransitionNavigationPage.GetSharedTransitionDuration(PropertiesContainer);
-        }
-
-        void UpdateSelectedGroup()
-        {
-            _selectedGroup = SharedTransitionNavigationPage.GetSelectedTagGroup(PropertiesContainer);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Plugin.SharedTransitions
         /// <summary>
         /// Group used to identify repeated views 
         /// </summary>
-        public static readonly BindableProperty TagGroupProperty = BindableProperty.CreateAttached("TagGroup", typeof(int), typeof(Transition), 0);
+        public static readonly BindableProperty TagGroupProperty = BindableProperty.CreateAttached("TagGroup", typeof(int), typeof(Transition), 0, propertyChanged: OntagGroupChanged);
 
 
         /// <summary>
@@ -127,17 +127,20 @@ namespace Plugin.SharedTransitions
             {
                 var tag = GetUniqueTag(element);
                 var group = GetTagGroup(element);
-                if (!(element.Navigation?.NavigationStack.Count > 0) || tag <= 0) return 0;
+                if (tag < 0) return 0;
 
-                var currentPage = element.Navigation.NavigationStack.Last();
-                if (currentPage.Parent is SharedTransitionNavigationPage navPage)
+                var parent = element.Parent;
+                while(parent != null && !(parent is SharedTransitionNavigationPage))
                 {
-                    navPage.TagMap.Add(currentPage, tag, group, viewId);
-                    pageId = currentPage.Id;
+                    parent = parent.Parent;
+                }
+                if(parent is SharedTransitionNavigationPage navPage)
+                {
+                    navPage.TagMap.Add(navPage.CurrentPage, tag, group, viewId);
+                    pageId = navPage.CurrentPage.Id;
                     return tag;
                 }
             }
-
             return 0;
         }
 
@@ -163,6 +166,12 @@ namespace Plugin.SharedTransitions
             {
                 element.Effects.Remove(existing);
             }
+            RegisterTagInStack(bindable, 0, out _);
+        }
+
+        private static void OntagGroupChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            RegisterTagInStack(bindable, 0, out _);
         }
     }
 }

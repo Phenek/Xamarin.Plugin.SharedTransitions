@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CoreGraphics;
 using Foundation;
@@ -38,6 +39,15 @@ namespace Plugin.SharedTransitions.iOS.Extentions
             // but we don't want it visible yet.
             containerView.InsertSubview(toViewController.View, 0);
             toViewController.View.Alpha = 0;
+
+            if(!_viewsToAnimate.Any() && _navigationPage.View.GestureRecognizers.Contains(_navigationPage.InteractiveTransitionRecognizer))
+            {
+                _navigationPage.View.RemoveGestureRecognizer(_navigationPage.InteractiveTransitionRecognizer);
+            }
+            else if (_viewsToAnimate.Any() && !_navigationPage.View.GestureRecognizers.Contains(_navigationPage.InteractiveTransitionRecognizer))
+            {
+                _navigationPage.View.AddGestureRecognizer(_navigationPage.InteractiveTransitionRecognizer);
+            }
 
             //iterate the destination views, this has two benefits:
             //1) We are sure to dont start transitions with views only in the start controller
